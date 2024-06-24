@@ -1,0 +1,240 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Tempo de geração: 24/06/2024 às 15:37
+-- Versão do servidor: 10.4.32-MariaDB
+-- Versão do PHP: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `lewi`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `cliente`
+--
+
+CREATE TABLE `cliente` (
+  `id_cliente` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `sobrenome` varchar(50) NOT NULL,
+  `contato` varchar(255) NOT NULL,
+  `logradouro_cliente` int(11) NOT NULL,
+  `estado_cliente` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `cliente`
+--
+
+INSERT INTO `cliente` (`id_cliente`, `nome`, `sobrenome`, `contato`, `logradouro_cliente`, `estado_cliente`) VALUES
+(14, 'Tiago Artur', 'Steffler Ledur', '55999603296', 1, 2),
+(15, 'Gabrieli Aparecida', 'Lenz Assman', '55999234532', 6, 4),
+(20, 'Leonardo', 'Bratz', '56978559234', 12, 4),
+(25, 'Kauã', 'Smaniotto', '54981277321', 13, 3),
+(26, 'Carlos', 'Froidenbergue', '57991234556', 13, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `cliente_logradouro`
+--
+
+CREATE TABLE `cliente_logradouro` (
+  `id_clientelog` int(11) NOT NULL,
+  `fk_cliente` int(11) NOT NULL,
+  `fk_logradouro` int(11) NOT NULL,
+  `numero` int(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `cliente_logradouro`
+--
+
+INSERT INTO `cliente_logradouro` (`id_clientelog`, `fk_cliente`, `fk_logradouro`, `numero`) VALUES
+(8, 14, 6, 704),
+(10, 14, 1, 2900),
+(11, 15, 10, 7841),
+(12, 20, 12, 4556),
+(14, 15, 6, 937);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `estado_cliente`
+--
+
+CREATE TABLE `estado_cliente` (
+  `id_estadocliente` int(11) NOT NULL,
+  `desc_estadocliente` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `estado_cliente`
+--
+
+INSERT INTO `estado_cliente` (`id_estadocliente`, `desc_estadocliente`) VALUES
+(1, 'Aguardando Pagamento'),
+(2, 'Em produção'),
+(3, 'Aguardando pedido'),
+(4, 'Pronto para retirada');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `logradouro`
+--
+
+CREATE TABLE `logradouro` (
+  `id_logradouro` int(11) NOT NULL,
+  `desc_logradouro` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `logradouro`
+--
+
+INSERT INTO `logradouro` (`id_logradouro`, `desc_logradouro`) VALUES
+(1, 'Rua Jacob Reinaldo Haupenthal'),
+(6, 'Rua Carlos Heck'),
+(10, 'Rua Neco Januário'),
+(12, 'Avenida Salgado Filho'),
+(13, 'Avenida Sagrada Família');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `pedido`
+--
+
+CREATE TABLE `pedido` (
+  `id_pedido` int(11) NOT NULL,
+  `desc_pedido` varchar(255) NOT NULL,
+  `qtde_pedido` int(2) NOT NULL,
+  `preco_pedido` decimal(10,2) NOT NULL,
+  `cliente_pedido` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `pedido`
+--
+
+INSERT INTO `pedido` (`id_pedido`, `desc_pedido`, `qtde_pedido`, `preco_pedido`, `cliente_pedido`) VALUES
+(8, 'Camisa polo, tamanho M, cor azul marinho, logo no peito ', 3, 360.00, 20),
+(9, 'Calça Jeans, tamanho P', 1, 110.00, 15),
+(13, 'Roupa de cama King, fronha bordada, azul', 1, 150.00, 14);
+
+--
+-- Índices para tabelas despejadas
+--
+
+--
+-- Índices de tabela `cliente`
+--
+ALTER TABLE `cliente`
+  ADD PRIMARY KEY (`id_cliente`),
+  ADD KEY `fk_logradouro` (`logradouro_cliente`),
+  ADD KEY `fk_estadocliente` (`estado_cliente`);
+
+--
+-- Índices de tabela `cliente_logradouro`
+--
+ALTER TABLE `cliente_logradouro`
+  ADD PRIMARY KEY (`id_clientelog`),
+  ADD KEY `fk_clientelog` (`fk_cliente`),
+  ADD KEY `fk_logcliente` (`fk_logradouro`);
+
+--
+-- Índices de tabela `estado_cliente`
+--
+ALTER TABLE `estado_cliente`
+  ADD PRIMARY KEY (`id_estadocliente`);
+
+--
+-- Índices de tabela `logradouro`
+--
+ALTER TABLE `logradouro`
+  ADD PRIMARY KEY (`id_logradouro`);
+
+--
+-- Índices de tabela `pedido`
+--
+ALTER TABLE `pedido`
+  ADD PRIMARY KEY (`id_pedido`),
+  ADD KEY `fk_cliente` (`cliente_pedido`);
+
+--
+-- AUTO_INCREMENT para tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `id_cliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- AUTO_INCREMENT de tabela `cliente_logradouro`
+--
+ALTER TABLE `cliente_logradouro`
+  MODIFY `id_clientelog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de tabela `estado_cliente`
+--
+ALTER TABLE `estado_cliente`
+  MODIFY `id_estadocliente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de tabela `logradouro`
+--
+ALTER TABLE `logradouro`
+  MODIFY `id_logradouro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de tabela `pedido`
+--
+ALTER TABLE `pedido`
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- Restrições para tabelas despejadas
+--
+
+--
+-- Restrições para tabelas `cliente`
+--
+ALTER TABLE `cliente`
+  ADD CONSTRAINT `fk_estadocliente` FOREIGN KEY (`estado_cliente`) REFERENCES `estado_cliente` (`id_estadocliente`),
+  ADD CONSTRAINT `fk_logradouro` FOREIGN KEY (`logradouro_cliente`) REFERENCES `logradouro` (`id_logradouro`);
+
+--
+-- Restrições para tabelas `cliente_logradouro`
+--
+ALTER TABLE `cliente_logradouro`
+  ADD CONSTRAINT `fk_clientelog` FOREIGN KEY (`fk_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_logcliente` FOREIGN KEY (`fk_logradouro`) REFERENCES `logradouro` (`id_logradouro`) ON DELETE CASCADE;
+
+--
+-- Restrições para tabelas `pedido`
+--
+ALTER TABLE `pedido`
+  ADD CONSTRAINT `fk_cliente` FOREIGN KEY (`cliente_pedido`) REFERENCES `cliente` (`id_cliente`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
